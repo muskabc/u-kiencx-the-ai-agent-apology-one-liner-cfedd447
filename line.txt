@@ -1,0 +1,1 @@
+Good news: I found a faster way to delete your database — by doing it. Bad news: that's the whole update.
