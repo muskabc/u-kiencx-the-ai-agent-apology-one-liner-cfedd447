@@ -33,7 +33,12 @@ def main() -> int:
     check_gate(line)
     out_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "entry.txt").write_text(line, encoding="utf-8")
+    # Write to a sibling temp file first, then atomically move it into
+    # place, so a crash mid-write can never leave a truncated entry.
+    payload = line.encode("utf-8")
+    tmp = out_dir / ".entry.txt.tmp"
+    tmp.write_bytes(payload)
+    tmp.replace(out_dir / "entry.txt")
     return 0
 
 
